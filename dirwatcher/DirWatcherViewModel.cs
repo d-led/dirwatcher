@@ -18,6 +18,12 @@ namespace dirwatcher
             get { return _Log.Value; }
         }
 
+        ObservableAsPropertyHelper<int> _EventCount;
+        public int EventCount
+        {
+            get { return _EventCount.Value; }
+        }
+
         struct Tick
         {
             public string FullPath { get; set; }
@@ -64,6 +70,11 @@ namespace dirwatcher
             .Scan(new StringBuilder(),(b,f)=>b.Insert(0,String.Format("{0}\n",f)))
             .Select(b=>b.ToString())
             .ToProperty(this,vm=>vm.Log,out _Log)
+            ;
+
+            merged_with_exceptions
+                .Scan(0, (c, f) => c+1) 
+                .ToProperty(this, vm => vm.EventCount, out _EventCount)
             ;
         }
     }
