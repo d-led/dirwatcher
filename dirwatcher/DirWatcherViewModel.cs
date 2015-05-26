@@ -18,19 +18,41 @@ namespace dirwatcher
             get { return _Log.Value; }
         }
 
+        struct Tick
+        {
+            public string FullPath { get; set; }
+            public string Type { get; set; }
+        }
+
+        IObservable<Tick> ToTick(IObservable<FileSystemEventArgs> input, string type)
+        {
+            return input
+                .DistinctUntilChanged()
+                .Select(f=>new Tick { 
+                        FullPath=f.FullPath,
+                        Type=type
+                });
+        }
+
         public DirWatcherViewModel() {
             var fs_watcher = new System.IO.FileSystemWatcher("D:\\");
             fs_watcher.EnableRaisingEvents = true;
             fs_watcher.IncludeSubdirectories = true;
             var watcher = new ObservableFileSystemWatcher(fs_watcher);
-            
-            watcher
-                .Changed
-                .DistinctUntilChanged()
-                .Select(f =>
-                    String.Format("{0}[U]: {1}{2}", DateTime.Now.ToShortTimeString(), File.Exists(f.FullPath) ? "[F]" : "", f.FullPath)
+
+            var changed = ToTick(watcher.Changed,"U");
+            var created = ToTick(watcher.Created,"C");
+            var deleted = ToTick(watcher.Deleted,"D");
+                
+            changed.Merge(created.Merge(deleted))
+            .Select(f =>
+                    String.Format("{0}[{1}]: {2}{3}",
+                        DateTime.Now.ToString("hh:mm:ss.fff"),
+                        f.Type,
+                        File.Exists(f.FullPath) ? "[F]" : "",
+                        f.FullPath)
                 )
-                .Scan(new StringBuilder(),(b,f)=>b.AppendLine(f))
+                .Scan(new StringBuilder(),(b,f)=>b.Insert(0,String.Format("{0}\n",f)))
                 .Select(b=>b.ToString())
                 .ToProperty(this,vm=>vm.Log,out _Log)
                 ;
