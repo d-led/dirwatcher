@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>reactiveui-core</id>
+    <version>6.5.0</version>
+    <authors>Paul Betts</authors>
+    <owners>Paul Betts</owners>
+    <licenseUrl>http://opensource.org/licenses/ms-pl.html</licenseUrl>
+    <projectUrl>http://www.reactiveui.net/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>An MVVM library for .NET that is deeply integrated with the Reactive Extensions</description>
+    <language>en-us</language>
+    <dependencies>
+      <group>
+        <dependency id="Rx-Main" version="2.2.5" />
+        <dependency id="Splat" version="[1.0, 2.0)" />
+      </group>
+      <group targetFramework="Windows8.0">
+        <dependency id="Rx-Main" version="2.2.5" />
+        <dependency id="Splat" version="[1.0, 2.0)" />
+        <dependency id="Rx-Xaml" version="2.2.5" />
+        <dependency id="Rx-WinRT" version="2.2.5" />
+      </group>
+      <group targetFramework="WindowsPhone8.0">
+        <dependency id="Rx-Main" version="2.2.5" />
+        <dependency id="Splat" version="[1.0, 2.0)" />
+        <dependency id="Rx-Xaml" version="2.2.5" />
+        <dependency id="Rx-WinRT" version="2.2.5" />
+      </group>
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="Rx-Main" version="2.2.5" />
+        <dependency id="Splat" version="[1.0, 2.0)" />
+        <dependency id="Rx-Xaml" version="2.2.5" />
+      </group>
+      <group targetFramework=".NETPortable0.0-win81+wpa81">
+        <dependency id="Rx-Main" version="2.2.5" />
+        <dependency id="Splat" version="[1.0, 2.0)" />
+        <dependency id="Rx-Xaml" version="2.2.5" />
+        <dependency id="Rx-WinRT" version="2.2.5" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

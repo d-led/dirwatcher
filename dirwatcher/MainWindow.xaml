@@ -1,0 +1,9 @@
+﻿<Window x:Class="dirwatcher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525"
+        DataContext="{StaticResource MainViewModel}">
+    <Grid>
+        <TextBox Text="{Binding Log,Mode=OneWay}" Margin="10,36,10,0" TextWrapping="Wrap" Height="274" IsReadOnly="True"/>
+    </Grid>
+</Window>
