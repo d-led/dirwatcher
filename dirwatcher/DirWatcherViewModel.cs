@@ -41,9 +41,12 @@ namespace dirwatcher
         }
 
         public DirWatcherViewModel() {
-            var fs_watcher = new System.IO.FileSystemWatcher("D:\\");
-            fs_watcher.EnableRaisingEvents = true;
-            fs_watcher.IncludeSubdirectories = true;
+            var fs_watcher = new System.IO.FileSystemWatcher("D:\\")
+            {
+                EnableRaisingEvents = true,
+                IncludeSubdirectories = true
+            };
+
             var watcher = new ObservableFileSystemWatcher(fs_watcher);
 
             var changed = ToTick(watcher.Changed,"U");
