@@ -14,7 +14,7 @@ namespace dirwatcher
     {
         System.IO.FileSystemWatcher filesystem_watcher;
 
-        string _StartPath = @"C:\";
+        string _StartPath = @"D:\";
         public string StartPath
         {
             get { return _StartPath; }
@@ -56,7 +56,10 @@ namespace dirwatcher
         }
 
         public DirWatcherViewModel() {
-            filesystem_watcher = new System.IO.FileSystemWatcher(this.StartPath)
+            if (!Directory.Exists(StartPath))
+                StartPath="C:\\";
+
+            filesystem_watcher = new System.IO.FileSystemWatcher(StartPath)
             {
                 EnableRaisingEvents = true,
                 IncludeSubdirectories = true
