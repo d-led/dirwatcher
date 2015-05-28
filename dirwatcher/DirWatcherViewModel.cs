@@ -24,6 +24,8 @@ namespace dirwatcher
                     filesystem_watcher.Path = value;
                 }
                 this.RaiseAndSetIfChanged(ref _StartPath, value);
+                if (!Directory.Exists(value))
+                    throw new DirectoryNotFoundException(value);
             }
         }
 
