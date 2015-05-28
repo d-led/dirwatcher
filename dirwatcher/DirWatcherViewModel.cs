@@ -12,6 +12,21 @@ namespace dirwatcher
 {
     public class DirWatcherViewModel : ReactiveObject
     {
+        System.IO.FileSystemWatcher filesystem_watcher;
+
+        string _StartPath = @"C:\";
+        public string StartPath
+        {
+            get { return _StartPath; }
+            set {
+                if (Directory.Exists(value))
+                {
+                    filesystem_watcher.Path = value;
+                }
+                this.RaiseAndSetIfChanged(ref _StartPath, value);
+            }
+        }
+
         ObservableAsPropertyHelper<string> _Log;
         public string Log
         {
@@ -41,13 +56,13 @@ namespace dirwatcher
         }
 
         public DirWatcherViewModel() {
-            var fs_watcher = new System.IO.FileSystemWatcher("D:\\")
+            filesystem_watcher = new System.IO.FileSystemWatcher(this.StartPath)
             {
                 EnableRaisingEvents = true,
                 IncludeSubdirectories = true
             };
 
-            var watcher = new ObservableFileSystemWatcher(fs_watcher);
+            var watcher = new ObservableFileSystemWatcher(filesystem_watcher);
 
             var changed = ToTick(watcher.Changed,"U");
             var created = ToTick(watcher.Created,"C");
