@@ -83,16 +83,16 @@ namespace dirwatcher
             .Merge(merged));
 
             merged_with_exceptions
-            .Select(f =>
-                    String.Format("{0}[{1}]: {2}{3}",
-                        DateTime.Now.ToString("hh:mm:ss.fff"),
-                        f.Type,
-                        File.Exists(f.FullPath) ? "[F]" : "",
-                        f.FullPath)
-            )
-            .Scan(new StringBuilder(),(b,f)=>b.Insert(0,String.Format("{0}\n",f)))
-            .Select(b=>b.ToString())
-            .ToProperty(this,vm=>vm.Log,out _Log)
+                .Select(f =>
+                        String.Format("{0}[{1}]: {2}{3}",
+                            DateTime.Now.ToString("hh:mm:ss.fff"),
+                            f.Type,
+                            File.Exists(f.FullPath) ? "[F]" : "",
+                            f.FullPath)
+                )
+                .Scan(new StringBuilder(),(b,f)=>b.Insert(0,String.Format("{0}\n",f)))
+                .Select(b=>b.ToString())
+                .ToProperty(this,vm=>vm.Log,out _Log)
             ;
 
             merged_with_exceptions
