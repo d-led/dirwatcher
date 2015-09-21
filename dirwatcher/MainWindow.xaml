@@ -5,6 +5,8 @@
         Title="DirWatcher" Height="350" Width="525"
         DataContext="{StaticResource MainViewModel}" Icon="dirwatcher.ico"
         ShowTitleBar="True"
+        MinHeight="200"
+        MinWidth="200"
         Topmost="True">
     <Grid>
         <Grid.RowDefinitions>
