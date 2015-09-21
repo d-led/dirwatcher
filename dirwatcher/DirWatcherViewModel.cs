@@ -104,7 +104,8 @@ namespace dirwatcher
             ;
 
             merged_with_exceptions
-                .Scan(0, (c, f) => c+1) 
+                .Scan(0, (c, f) => c+1)
+                .Merge(Clear.Select(_=>0))
                 .ToProperty(this, vm => vm.EventCount, out _EventCount)
             ;
         }
