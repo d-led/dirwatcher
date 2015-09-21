@@ -29,6 +29,8 @@ namespace dirwatcher
             }
         }
 
+        public ReactiveCommand<object> Clear { get; private set; }
+
         ObservableAsPropertyHelper<string> _Log;
         public string Log
         {
@@ -82,6 +84,11 @@ namespace dirwatcher
             })
             .Merge(merged));
 
+            StringBuilder builder=new StringBuilder();
+
+            Clear = ReactiveCommand.Create();
+            Clear.Subscribe(_ => builder.Clear());
+
             merged_with_exceptions
                 .Select(f =>
                         String.Format("{0}[{1}]: {2}{3}",
@@ -90,8 +97,9 @@ namespace dirwatcher
                             File.Exists(f.FullPath) ? "[F]" : "",
                             f.FullPath)
                 )
-                .Scan(new StringBuilder(),(b,f)=>b.Insert(0,String.Format("{0}\n",f)))
+                .Scan(builder = new StringBuilder(),(b,f)=>b.Insert(0,String.Format("{0}\n",f)))
                 .Select(b=>b.ToString())
+                .Merge(Clear.Select(_=>""))
                 .ToProperty(this,vm=>vm.Log,out _Log)
             ;
 
