@@ -47,6 +47,7 @@ namespace dirwatcher
         {
             public string FullPath { get; set; }
             public string Type { get; set; }
+            public bool Clear { get; set; }
         }
 
         IObservable<Tick> ToTick(IObservable<FileSystemEventArgs> input, string type)
@@ -104,8 +105,8 @@ namespace dirwatcher
             ;
 
             merged_with_exceptions
-                .Scan(0, (c, f) => c+1)
-                .Merge(Clear.Select(_=>0))
+                .Merge(Clear.Select(_ => new Tick { Clear = true }))
+                .Scan(0, (c, f) => (f.Clear) ? 0 : (c + 1))
                 .ToProperty(this, vm => vm.EventCount, out _EventCount)
             ;
         }
