@@ -93,7 +93,19 @@ namespace dirwatcher
             var created = ToTick(watcher.Created,"C");
             var deleted = ToTick(watcher.Deleted,"D");
 
-            var merged = changed.Merge(created.Merge(deleted));
+            //////////////////////////////////////
+            StringBuilder builder = new StringBuilder();
+            Clear = ReactiveCommand.Create();
+            Clear.Subscribe(_ => builder.Clear());
+            //////////////////////////////////////
+            Exit = ReactiveCommand.Create();
+            Exit.Subscribe(_ => Application.Current.Shutdown());
+            //////////////////////////////////////
+
+            var merged = changed.Merge(
+                            created.Merge(deleted
+                                    .Merge(Clear.Select(_ => new Tick { Clear = true })))
+            );
 
             var merged_with_exceptions = merged.Catch<Tick, Exception>(ex => Observable.Return<Tick>(new Tick
             {
@@ -102,33 +114,31 @@ namespace dirwatcher
             })
             .Merge(merged));
 
-            StringBuilder builder=new StringBuilder();
 
-            //////////////////////////////////////
-            Clear = ReactiveCommand.Create();
-            Clear.Subscribe(_ => builder.Clear());
-            //////////////////////////////////////
-            Exit = ReactiveCommand.Create();
-            Exit.Subscribe(_ => Application.Current.Shutdown());
-            //////////////////////////////////////
-
-            merged_with_exceptions
-                .Select(f =>
+            var filtered_ticks = merged_with_exceptions
+                .Select(f => new
+                {
+                    Log = f.Clear ? 
+                        ""
+                        :
                         String.Format("{0}[{1}]: {2}{3}",
-                            DateTime.Now.ToString("hh:mm:ss.fff"),
-                            f.Type,
-                            File.Exists(f.FullPath) ? "[F]" : "",
-                            f.FullPath)
-                )
-                .Where(l=> _Filter!=null ? _Filter.IsMatch(l) : true)
-                .Scan(builder = new StringBuilder(),(b,f)=>b.Insert(0,String.Format("{0}\n",f)))
-                .Select(b=>b.ToString())
-                .Merge(Clear.Select(_=>""))
-                .ToProperty(this,vm=>vm.Log,out _Log)
+                        DateTime.Now.ToString("hh:mm:ss.fff"),
+                        f.Type,
+                        File.Exists(f.FullPath) ? "[F]" : "",
+                        f.FullPath),
+                    Clear = f.Clear
+                })
+                .Where(l => _Filter != null ? (_Filter.IsMatch(l.Log) || l.Clear) : true)
             ;
 
-            merged_with_exceptions
-                .Merge(Clear.Select(_ => new Tick { Clear = true }))
+            filtered_ticks
+                .Scan(builder = new StringBuilder(), (b, f) => b.Insert(0, String.Format("{0}\n", f.Log)))
+                .Select(b => b.ToString())
+                .Merge(Clear.Select(_ => ""))
+                .ToProperty(this, vm => vm.Log, out _Log)
+            ;
+
+            filtered_ticks
                 .Scan(0, (c, f) => (f.Clear) ? 0 : (c + 1))
                 .ToProperty(this, vm => vm.EventCount, out _EventCount)
             ;
