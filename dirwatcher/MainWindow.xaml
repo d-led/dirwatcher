@@ -9,6 +9,11 @@
         MinWidth="200"
         IconBitmapScalingMode="NearestNeighbor"
         Topmost="True">
+    <Controls:MetroWindow.InputBindings>
+        <KeyBinding Command="{Binding Path=Exit}" Modifiers="Ctrl" Key="W"></KeyBinding>
+        <KeyBinding Command="{Binding Path=Exit}" Modifiers="Ctrl" Key="Q"></KeyBinding>
+        <KeyBinding Command="{Binding Path=Exit}" Modifiers="Ctrl" Key="X"></KeyBinding>
+    </Controls:MetroWindow.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>

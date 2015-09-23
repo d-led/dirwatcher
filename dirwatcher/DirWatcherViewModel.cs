@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Reactive.Linq;
 using RxFileSystemWatcher;
 using System.IO;
+using System.Windows;
 
 namespace dirwatcher
 {
@@ -30,6 +31,7 @@ namespace dirwatcher
         }
 
         public ReactiveCommand<object> Clear { get; private set; }
+        public ReactiveCommand<object> Exit { get; private set; }
 
         ObservableAsPropertyHelper<string> _Log;
         public string Log
@@ -87,8 +89,13 @@ namespace dirwatcher
 
             StringBuilder builder=new StringBuilder();
 
+            //////////////////////////////////////
             Clear = ReactiveCommand.Create();
             Clear.Subscribe(_ => builder.Clear());
+            //////////////////////////////////////
+            Exit = ReactiveCommand.Create();
+            Exit.Subscribe(_ => Application.Current.Shutdown());
+            //////////////////////////////////////
 
             merged_with_exceptions
                 .Select(f =>
