@@ -8,6 +8,7 @@ using System.Reactive.Linq;
 using RxFileSystemWatcher;
 using System.IO;
 using System.Windows;
+using System.Text.RegularExpressions;
 
 namespace dirwatcher
 {
@@ -27,6 +28,20 @@ namespace dirwatcher
                 this.RaiseAndSetIfChanged(ref _StartPath, value);
                 if (!Directory.Exists(value))
                     throw new DirectoryNotFoundException(value);
+            }
+        }
+
+        string _RegexFilter = "";
+        Regex _Filter = null;
+        public string RegexFilter
+        {
+            get { return _RegexFilter; }
+            set
+            {
+                var trimmed = value.Trim();
+                _Filter = trimmed.Length != 0 ? new Regex(trimmed, RegexOptions.Compiled) : null;
+                _RegexFilter = trimmed;
+                this.RaiseAndSetIfChanged(ref _RegexFilter, value);
             }
         }
 
@@ -105,6 +120,7 @@ namespace dirwatcher
                             File.Exists(f.FullPath) ? "[F]" : "",
                             f.FullPath)
                 )
+                .Where(l=> _Filter!=null ? _Filter.IsMatch(l) : true)
                 .Scan(builder = new StringBuilder(),(b,f)=>b.Insert(0,String.Format("{0}\n",f)))
                 .Select(b=>b.ToString())
                 .Merge(Clear.Select(_=>""))

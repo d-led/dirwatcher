@@ -18,7 +18,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="35"/>
+            <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
         <TextBox Grid.Row="0" Grid.ColumnSpan="2">
             <TextBox.Text>
@@ -31,12 +31,24 @@
         </TextBox>
         <TextBox Margin="5" Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Log,Mode=OneWay}" TextWrapping="NoWrap" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
         <Grid Grid.Row="2" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition Height="30"></RowDefinition>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock VerticalAlignment="Center" Text="{Binding EventCount,StringFormat=Events: {0},Mode=OneWay}"/>
-            <Button Grid.Column="1" Command="{Binding Path=Clear}" Content="Clear"></Button>
+            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Regex filter" />
+            <TextBox Grid.Column="1" Grid.Row="0">
+                <Binding Path="RegexFilter" UpdateSourceTrigger="PropertyChanged" Delay="300">
+                    <Binding.ValidationRules>
+                        <ExceptionValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox>
+            <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{Binding EventCount,StringFormat=Events: {0},Mode=OneWay}"/>
+            <Button Grid.Column="1" Grid.Row="1" Command="{Binding Path=Clear}" Content="Clear"></Button>
         </Grid>
     </Grid>
 </Controls:MetroWindow>
