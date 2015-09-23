@@ -24,10 +24,12 @@ namespace dirwatcher
                 if (Directory.Exists(value))
                 {
                     filesystem_watcher.Path = value;
+                    this.RaiseAndSetIfChanged(ref _StartPath, value);
                 }
-                this.RaiseAndSetIfChanged(ref _StartPath, value);
-                if (!Directory.Exists(value))
-                    throw new DirectoryNotFoundException(value);
+                else
+                {
+                    throw new DirectoryNotFoundException(String.Format("Directory not found: {0}", value));
+                }
             }
         }
 

@@ -39,7 +39,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Regex filter" />
+            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Regex filter"/>
             <TextBox Grid.Column="1" Grid.Row="0">
                 <Binding Path="RegexFilter" UpdateSourceTrigger="PropertyChanged" Delay="300">
                     <Binding.ValidationRules>
@@ -47,7 +47,7 @@
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox>
-            <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="{Binding EventCount,StringFormat=Events: {0},Mode=OneWay}"/>
+            <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding EventCount,StringFormat=Events: {0},Mode=OneWay}"/>
             <Button Grid.Column="1" Grid.Row="1" Command="{Binding Path=Clear}" Content="Clear"></Button>
         </Grid>
     </Grid>
