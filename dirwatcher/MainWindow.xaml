@@ -22,7 +22,7 @@
         </Grid.RowDefinitions>
         <TextBox Grid.Row="0" Grid.ColumnSpan="2">
             <TextBox.Text>
-                <Binding Path="StartPath">
+                <Binding Path="StartPath" UpdateSourceTrigger="PropertyChanged" Delay="300">
                     <Binding.ValidationRules>
                         <ExceptionValidationRule />
                     </Binding.ValidationRules>

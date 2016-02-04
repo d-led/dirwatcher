@@ -23,7 +23,9 @@ namespace dirwatcher
             set {
                 if (Directory.Exists(value))
                 {
-                    filesystem_watcher.Path = value;
+                    if (filesystem_watcher!=null)
+                        filesystem_watcher.Path = value;
+
                     this.RaiseAndSetIfChanged(ref _StartPath, value);
                 }
                 else
@@ -81,7 +83,7 @@ namespace dirwatcher
 
         public DirWatcherViewModel() {
             if (!Directory.Exists(StartPath))
-                StartPath="C:\\";
+                StartPath = AppDomain.CurrentDomain.BaseDirectory;
 
             filesystem_watcher = new System.IO.FileSystemWatcher(StartPath)
             {
