@@ -5,4 +5,6 @@ This is a simple reactive filesystem watcher for windows based on [ReactiveUI](h
 
 ![](dirwatcher.png)
 
-Quit: `Ctrl-W` or `Ctrl-Q`
+Filter: if none is entered, all events are shown. Otherwise, whole log string is matched.
+
+Quit: `Ctrl-W` / `Ctrl-Q` / `Ctrl-X` / `Alt-F4` according to taste.

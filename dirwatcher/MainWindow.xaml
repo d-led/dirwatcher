@@ -29,7 +29,12 @@
                 </Binding>
             </TextBox.Text>
         </TextBox>
-        <TextBox Margin="5" Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Log,Mode=OneWay}" TextWrapping="NoWrap" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
+        <TextBox Margin="5" Grid.Row="1" Grid.ColumnSpan="2" 
+                 Text="{Binding Log,Mode=OneWay}" 
+                 TextWrapping="NoWrap" 
+                 IsReadOnly="True" 
+                 HorizontalScrollBarVisibility="Auto" 
+                 VerticalScrollBarVisibility="Auto" />
         <Grid Grid.Row="2" Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"></RowDefinition>
@@ -47,7 +52,8 @@
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox>
-            <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding EventCount,StringFormat=Events: {0},Mode=OneWay}"/>
+            <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" 
+                       Text="{Binding EventCount,StringFormat=Events: {0},Mode=OneWay}"/>
             <Button Grid.Column="1" Grid.Row="1" Command="{Binding Path=Clear}" Content="Clear"></Button>
         </Grid>
     </Grid>
