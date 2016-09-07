@@ -18,10 +18,11 @@ namespace dirwatcher
         public string StartPath
         {
             get { return _StartPath; }
-            set {
+            set
+            {
                 if (Directory.Exists(value))
                 {
-                    if (filesystem_watcher!=null)
+                    if (filesystem_watcher != null)
                         filesystem_watcher.Path = value;
 
                     this.RaiseAndSetIfChanged(ref _StartPath, value);
@@ -73,13 +74,15 @@ namespace dirwatcher
         {
             return input
                 .DistinctUntilChanged()
-                .Select(f=>new Tick { 
-                        FullPath=f.FullPath,
-                        Type=type
+                .Select(f => new Tick
+                {
+                    FullPath = f.FullPath,
+                    Type = type
                 });
         }
 
-        public DirWatcherViewModel() {
+        public DirWatcherViewModel()
+        {
             if (!Directory.Exists(StartPath))
                 StartPath = AppDomain.CurrentDomain.BaseDirectory;
 
@@ -91,9 +94,9 @@ namespace dirwatcher
 
             var watcher = new ObservableFileSystemWatcher(filesystem_watcher);
 
-            var changed = ToTick(watcher.Changed,"U");
-            var created = ToTick(watcher.Created,"C");
-            var deleted = ToTick(watcher.Deleted,"D");
+            var changed = ToTick(watcher.Changed, "U");
+            var created = ToTick(watcher.Created, "C");
+            var deleted = ToTick(watcher.Deleted, "D");
 
             //////////////////////////////////////
             StringBuilder builder = new StringBuilder();
@@ -120,7 +123,7 @@ namespace dirwatcher
             var filtered_ticks = merged_with_exceptions
                 .Select(f => new
                 {
-                    Log = f.Clear ? 
+                    Log = f.Clear ?
                         ""
                         :
                         String.Format("{0}[{1}]: {2}{3}",
@@ -130,7 +133,7 @@ namespace dirwatcher
                         f.FullPath),
                     Clear = f.Clear
                 })
-                .Where(l => _Filter != null ? (_Filter.IsMatch(l.Log) || l.Clear) : true)
+                .Where(l => !(_Filter != null) || (_Filter.IsMatch(l.Log) || l.Clear))
             ;
 
             filtered_ticks
@@ -140,10 +143,14 @@ namespace dirwatcher
                 .ToProperty(this, vm => vm.Log, out _Log)
             ;
 
+
             filtered_ticks
                 .Scan(0, (c, f) => (f.Clear) ? 0 : (c + 1))
                 .ToProperty(this, vm => vm.EventCount, out _EventCount)
             ;
+
+            _Log.ThrownExceptions.Subscribe(_ => { });
+            _EventCount.ThrownExceptions.Subscribe(_ => { });
         }
     }
 }
