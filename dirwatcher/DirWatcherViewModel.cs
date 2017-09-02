@@ -1,5 +1,4 @@
-﻿using ReactiveUI;
-using System;
+﻿using System;
 using System.Linq;
 using System.Text;
 using System.Reactive.Linq;
@@ -7,12 +6,13 @@ using RxFileSystemWatcher;
 using System.IO;
 using System.Windows;
 using System.Text.RegularExpressions;
+using ReactiveUI;
 
 namespace dirwatcher
 {
     public class DirWatcherViewModel : ReactiveObject
     {
-        System.IO.FileSystemWatcher filesystem_watcher;
+        readonly FileSystemWatcher filesystem_watcher;
 
         string _StartPath = @"D:\";
         public string StartPath
@@ -48,16 +48,16 @@ namespace dirwatcher
             }
         }
 
-        public ReactiveCommand<object> Clear { get; private set; }
-        public ReactiveCommand<object> Exit { get; private set; }
+        public ReactiveCommand<System.Reactive.Unit, object> Clear { get; private set; }
+        public ReactiveCommand<System.Reactive.Unit, System.Reactive.Unit> Exit { get; private set; }
 
-        ObservableAsPropertyHelper<string> _Log;
+        readonly ObservableAsPropertyHelper<string> _Log;
         public string Log
         {
             get { return _Log.Value; }
         }
 
-        ObservableAsPropertyHelper<int> _EventCount;
+        readonly ObservableAsPropertyHelper<int> _EventCount;
         public int EventCount
         {
             get { return _EventCount.Value; }
@@ -100,11 +100,9 @@ namespace dirwatcher
 
             //////////////////////////////////////
             StringBuilder builder = new StringBuilder();
-            Clear = ReactiveCommand.Create();
-            Clear.Subscribe(_ => builder.Clear());
+            Clear = ReactiveCommand.Create(() => (object)builder.Clear());
             //////////////////////////////////////
-            Exit = ReactiveCommand.Create();
-            Exit.Subscribe(_ => Application.Current.Shutdown());
+            Exit = ReactiveCommand.Create(()=> { Application.Current.Shutdown(); });
             //////////////////////////////////////
 
             var merged = changed.Merge(
@@ -133,7 +131,7 @@ namespace dirwatcher
                         f.FullPath),
                     Clear = f.Clear
                 })
-                .Where(l => !(_Filter != null) || (_Filter.IsMatch(l.Log) || l.Clear))
+                .Where(l => (_Filter == null) || (_Filter.IsMatch(l.Log) || l.Clear))
             ;
 
             filtered_ticks
